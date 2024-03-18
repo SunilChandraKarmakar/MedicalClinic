@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "2G/J5VKx5LKdfJnJ59PEW5APIdAMZXi4SGKoS69p/eQ=",
+  "Source": "MedicalClinicWebApi",
+  "BasePath": "_content/MedicalClinicWebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
