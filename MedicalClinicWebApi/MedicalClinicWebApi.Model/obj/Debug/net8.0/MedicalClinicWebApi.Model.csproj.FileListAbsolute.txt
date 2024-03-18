@@ -1,0 +1,13 @@
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\bin\Debug\net8.0\MedicalClinicWebApi.Model.deps.json
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\bin\Debug\net8.0\MedicalClinicWebApi.Model.dll
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\bin\Debug\net8.0\MedicalClinicWebApi.Model.pdb
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.csproj.AssemblyReference.cache
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.AssemblyInfoInputs.cache
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.AssemblyInfo.cs
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.csproj.CoreCompileInputs.cache
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.sourcelink.json
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.dll
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\refint\MedicalClinicWebApi.Model.dll
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\MedicalClinicWebApi.Model.pdb
+D:\MedicalClinic\MedicalClinicWebApi\MedicalClinicWebApi.Model\obj\Debug\net8.0\ref\MedicalClinicWebApi.Model.dll
