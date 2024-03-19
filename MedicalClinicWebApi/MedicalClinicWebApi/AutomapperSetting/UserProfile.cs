@@ -14,7 +14,7 @@ namespace MedicalClinicWebApi.AutomapperSetting
             CreateMap<UserViewModel, User>();
 
             CreateMap<User, UserUpsertViewModel>();
-
+            CreateMap<UserUpsertViewModel, User>();
         }
     }
 }

@@ -35,9 +35,11 @@ namespace MedicalClinicWebApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<UserViewModel>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<UserViewModel>>> GetUsers()
         {
-            var users = _mapper.Map<IEnumerable<UserViewModel>>(await _userManager.Users.Include(u => u.UserType)
-                .Where(u => u.Email.ToLower() != "admin@gmail.com").ToListAsync());
+            var users = await _userManager.Users
+                        .Include(u => u.UserType)
+                        .ToListAsync();
 
+            var mapUsers = _mapper.Map<IEnumerable<UserViewModel>>(users);
             return Ok(users);
         }
 
@@ -49,26 +51,26 @@ namespace MedicalClinicWebApi.Controllers
             if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
                 return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User id can not found! Try again.", null));
 
-            var existUser = _mapper.Map<UserUpsertViewModel>(await _userManager.FindByIdAsync(id));
+            var existUser = await _userManager.FindByIdAsync(id);
+            var mapExistUser = _mapper.Map<UserUpsertViewModel>(existUser);
 
-            if (existUser != null)
-                return Ok(existUser);
+            if (mapExistUser != null)
+                return Ok(mapExistUser);
 
             return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not found! Try again.", id));
         }
 
         [HttpPost]
-        public ActionResult<UserEditViewModel> Create([FromBody] RegisterViewModel model)
+        [ProducesResponseType(typeof(UserUpsertViewModel), (int)HttpStatusCode.Created)]
+        public ActionResult<UserUpsertViewModel> Create([FromBody] UserUpsertViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = _mapper.Map<User>(model);
                 user.UserName = model.Email;
-                user.CreatedTime = DateTime.UtcNow;
-                user.LastModifiedTime = DateTime.UtcNow;
 
                 var result = _userManager.CreateAsync(user, model.Password);
-                model = _mapper.Map<RegisterViewModel>(user);
+                model = _mapper.Map<UserUpsertViewModel>(user);
 
                 if (result.Result.Succeeded)
                     return Ok(new ResponseStatusModel(ResponseCode.Ok, "User has been registered successfull.", model));

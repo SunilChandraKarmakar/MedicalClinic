@@ -1,0 +1,68 @@
+<div class="row m-0 p-0 mt-3">
+  <div class="col-md-12">
+    <h3 class="text-center">Create User</h3>
+    <hr>
+  </div>
+</div>
+<div class="row m-0 p-0 justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-lg">
+      <div class="card-body">
+        <form class="row g-3" autocomplete="off">
+          <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="userCreateModel.firstName">
+          </div>
+          <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="userCreateModel.lastName">
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="example@abc.com" [(ngModel)]="userCreateModel.email">
+          </div>
+          <div class="col-md-6">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="userCreateModel.password">
+          </div>
+          <div class="col-md-6">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="userCreateModel.phoneNumber">
+          </div>
+          <div class="col-md-6">
+            <div class="row user-type-radio">
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="normal" id="normal" [(ngModel)]="userCreateModel.userTypeId">
+                  <label class="form-check-label" for="normal">
+                    Normal
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="manager" id="manager" [(ngModel)]="userCreateModel.userTypeId">
+                  <label class="form-check-label" for="manager">
+                    Manager
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="Admin" id="Admin" [(ngModel)]="userCreateModel.userTypeId">
+                  <label class="form-check-label" for="admin">
+                    Admin
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
