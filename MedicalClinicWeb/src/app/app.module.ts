@@ -10,12 +10,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserListComponent,
-    UserCreateComponent
+    UserCreateComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

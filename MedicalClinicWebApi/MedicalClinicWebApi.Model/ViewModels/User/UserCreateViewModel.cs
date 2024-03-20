@@ -2,10 +2,8 @@
 
 namespace MedicalClinicWebApi.Model.ViewModels.User
 {
-    public class UserUpsertViewModel
+    public class UserCreateViewModel
     {
-        public string Id { get; set; }
-
         [Required(ErrorMessage = "Please, provied first name.")]
         [StringLength(50, MinimumLength = 2)]
         public string FirstName { get; set; }

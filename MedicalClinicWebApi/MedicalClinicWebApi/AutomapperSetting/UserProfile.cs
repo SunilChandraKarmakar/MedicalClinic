@@ -13,8 +13,11 @@ namespace MedicalClinicWebApi.AutomapperSetting
                 .ForMember(d => d.UserTypeName, s => s.MapFrom(m => m.UserType.Name));
             CreateMap<UserViewModel, User>();
 
-            CreateMap<User, UserUpsertViewModel>();
-            CreateMap<UserUpsertViewModel, User>();
+            CreateMap<User, UserCreateViewModel>();
+            CreateMap<UserCreateViewModel, User>();
+
+            CreateMap<User, UserUpdateViewModel>();
+            CreateMap<UserUpdateViewModel, User>();
         }
     }
 }

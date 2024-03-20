@@ -1,4 +1,4 @@
-export class UserUpsertViewModel {
+export class UserUpdateViewModel {
     id: string;
     firstName: string;
     lastName: string;
