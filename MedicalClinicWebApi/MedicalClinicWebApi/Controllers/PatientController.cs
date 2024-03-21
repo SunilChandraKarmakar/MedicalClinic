@@ -14,11 +14,7 @@ namespace MedicalClinicWebApi.Controllers
     public class PatientController : ControllerBase
     {
         private readonly MedicalClinicWebApiDbContext _context;
-
-        public PatientController(MedicalClinicWebApiDbContext context)
-        {
-            _context = context;
-        }
+        public PatientController(MedicalClinicWebApiDbContext context) => _context = context;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Patient>), (int) HttpStatusCode.OK)]
