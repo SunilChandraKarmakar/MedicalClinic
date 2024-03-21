@@ -4,8 +4,8 @@ export class UserViewModel {
     lastName: string;
     email: string;
     phoneNumber: string;
-    userName: string;
     password: string;
     token: string;
+    userTypeId: number;
     userTypeName: string;
 }

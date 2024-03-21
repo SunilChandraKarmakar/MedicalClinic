@@ -19,14 +19,15 @@ export class UserService {
   constructor(private httpClient: HttpClient) { }
 
   getUsers(): Observable<UserViewModel[]> {
-    // let userInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
-    // const asseccPermission = new HttpHeaders ({
-    //   'Content-Type': 'application/json',
-    //   'Authorization' : `Bearer ${userInfo.token}`
-    // });    
+    let userInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
+
+    const asseccPermission = new HttpHeaders ({
+      'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${userInfo.token}`
+    });    
 
     const getAllUsersUrl: string = `${this.appBaseUrl}user/getUsers`;
-    return this.httpClient.get<UserViewModel[]>(getAllUsersUrl);
+    return this.httpClient.get<UserViewModel[]>(getAllUsersUrl, { headers: asseccPermission });
   }
 
   create(createModel: UserCreateViewModel): Observable<UserCreateViewModel> {

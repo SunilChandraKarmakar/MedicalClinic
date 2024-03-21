@@ -33,7 +33,7 @@ namespace MedicalClinicWebApi.Controllers
             _jwtConfig = jwtConfig.Value;
         }
 
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserViewModel>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<UserViewModel>>> GetUsers()
@@ -63,6 +63,7 @@ namespace MedicalClinicWebApi.Controllers
             return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not found! Try again.", id));
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [ProducesResponseType(typeof(UserCreateViewModel), (int)HttpStatusCode.Created)]
         public ActionResult<UserCreateViewModel> Create([FromBody] UserCreateViewModel model)
@@ -94,10 +95,14 @@ namespace MedicalClinicWebApi.Controllers
 
                 if (result.Succeeded)
                 {
-                    var getExistUser = await _userManager.FindByEmailAsync(model.Email);
+                    var getExistUser = await _userManager.Users
+                                       .Include(u => u.UserType)
+                                       .Where(u => u.Email.ToLower() == model.Email.ToLower())
+                                       .FirstOrDefaultAsync();
+
                     var mapExistUser = _mapper.Map<UserViewModel>(getExistUser);
                     mapExistUser.Token = GenerateToken(mapExistUser);
-                    return Ok(new ResponseStatusModel(ResponseCode.Ok, "Login successfull", mapExistUser));
+                    return Ok(mapExistUser);
                 }
 
                 return BadRequest(new ResponseStatusModel(ResponseCode.FormValidateError, "Email and Password can not match, try again.", null));

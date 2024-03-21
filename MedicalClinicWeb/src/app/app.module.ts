@@ -11,13 +11,21 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { LoginComponent } from './components/login/login.component';
+import { PatientCreateComponent } from './components/patient/patient-create/patient-create.component';
+import { PatientListComponent } from './components/patient/patient-list/patient-list.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { UpcommingPatientListComponent } from './components/patient/upcomming-patient-list/upcomming-patient-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserListComponent,
     UserCreateComponent,
-    LoginComponent
+    LoginComponent,
+    PatientCreateComponent,
+    PatientListComponent,
+    ProfileComponent,
+    UpcommingPatientListComponent
   ],
   imports: [
     BrowserModule,

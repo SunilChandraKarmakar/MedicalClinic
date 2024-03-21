@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { UserType } from 'src/app/models/constant/user-type.enum';
 import { LoginViewModel } from 'src/app/models/login/login-view-model';
 import { UserViewModel } from 'src/app/models/user/user-view-model';
 import { UserService } from 'src/app/services/user.service';
@@ -29,15 +30,19 @@ export class LoginComponent implements OnInit {
     if(isFormValidationSuccess) {
       this.spinnerService.show();
       this.userService.login(this.loginModel).subscribe((result: UserViewModel) => {
-        localStorage.setItem('loginUserInfo', JSON.stringify(result));
+        localStorage.setItem("loginUserInfo", JSON.stringify(result));
         this.spinnerService.hide();
         this.toastrService.success("Login Successfull", "Successfull");
-        return this.router.navigate(["/user-list"]);
+        
+        if(result.userTypeId == UserType.Admin) {
+          return this.router.navigate(["/user_list"]);
+        } else {
+          return this.router.navigate(["/upcomming_patient_list"]);
+        }
       },
       (error: any) => {
         this.spinnerService.hide();
-        this.toastrService.error(error, "Error");
-        console.log("Error :- ", error);
+        this.toastrService.error("Email or password cannot match! Try again.", "Error");
       })
     }
   }

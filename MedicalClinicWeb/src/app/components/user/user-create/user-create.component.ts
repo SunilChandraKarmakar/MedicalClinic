@@ -31,7 +31,7 @@ export class UserCreateComponent implements OnInit {
       this.userService.create(this.userCreateModel).subscribe((result: UserCreateViewModel) => {
         this.spinnerService.hide();
         this.toastrService.success("User create successfull.", "Successfull");
-        return this.router.navigate(["/user-list"]);
+        return this.router.navigate(["/user_list"]);
       },
       (error: any) => {
         this.spinnerService.hide();
