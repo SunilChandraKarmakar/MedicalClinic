@@ -1,3 +1,81 @@
-<p>
-  upcomming-patient-list works!
-</p>
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <h3 class="text-center">Upcomming Patients</h3>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <form class="row g-3">
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="searchPatient" [(ngModel)]="searchPatient" 
+            placeholder="Search patient by Name / Phone / Email / Doctor">
+        </div>
+        <div class="col-md-5">
+          <button class="btn btn-sm btn-outline-primary mt-1" (click)="onClickSearchPatient()">
+            <i class="bi bi-search"></i>
+            Search
+          </button>
+          <button class="btn btn-sm btn-outline-primary mt-1 ms-1" (click)="onClickResetSearch()">
+            <i class="bi bi-card-list"></i>
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <table class="table table-bordered table-hover">
+        <thead class="text-center">
+          <tr>
+            <th class="th-lg">Basic Info</th>
+            <th class="th-lg">Contact Info</th>
+            <th class="th-lg">Appointment</th>
+            <th class="th-lg">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of upcommingPatients">
+            <td>
+              Name: {{ patient.firstName }} {{ patient.lastName }} <br>
+              Age: {{ patient.age }} <br>
+              Gender: 
+              <span *ngIf="patient.ganderId == 1">Male</span>
+              <span *ngIf="patient.ganderId == 2">Female</span>
+              <span *ngIf="patient.ganderId == 3">Other</span>
+            </td>
+            <td>
+              Email: {{ patient.email }} <br>
+              Phone: {{ patient.phoneNumber }}
+            </td>
+            <td>
+              Doctor: {{ patient.doctorName }} <br>
+              Appointment: {{ patient.AppointmentDate }}
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-info">
+                <i class="bi bi-pencil-square"></i>
+                Edit
+              </a>
+              <button class="btn btn-sm btn-outline-danger ms-1">
+                <i class="bi bi-trash"></i>
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Basic Info</th>
+            <th>Contact Info</th>
+            <th>Appointment</th>
+            <th>Action</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

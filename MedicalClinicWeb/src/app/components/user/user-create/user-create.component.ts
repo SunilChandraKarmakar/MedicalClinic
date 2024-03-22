@@ -23,6 +23,7 @@ export class UserCreateComponent implements OnInit {
   ngOnInit() {
   }
 
+  // Create user
   onCreateUser(): void {
     let isFormValidationSuccess: boolean = this.checkFormValidation();
 
@@ -40,6 +41,7 @@ export class UserCreateComponent implements OnInit {
     }
   }
 
+  // Form validation
   private checkFormValidation(): boolean {
     if(this.userCreateModel.firstName == undefined || this.userCreateModel.firstName == "" || this.userCreateModel.firstName == null) {
       this.toastrService.warning("Please, provied first name.", "Warning");
