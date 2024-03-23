@@ -92,7 +92,7 @@ export class PatientCreateComponent implements OnInit {
       return false;
     }
 
-    if(this.patientCreateModel.AppointmentDate == undefined || this.patientCreateModel.AppointmentDate == null) {
+    if(this.patientCreateModel.appointmentDate == undefined || this.patientCreateModel.appointmentDate == null) {
       this.toastrService.warning("Please, provied appointment date.", "Warning");
       return false;
     }

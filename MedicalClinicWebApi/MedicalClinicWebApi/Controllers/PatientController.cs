@@ -18,9 +18,17 @@ namespace MedicalClinicWebApi.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Patient>), (int) HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
+        public async Task<ActionResult<IEnumerable<Patient>>> GetUpcommingPatients()
         {
-            var patients = await _context.Patients.ToListAsync();
+            var patients = await _context.Patients.Where(p => p.AppointmentDate > DateTime.Now).ToListAsync();
+            return Ok(patients);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Patient>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetPreviousPatients()
+        {
+            var patients = await _context.Patients.Where(p => p.AppointmentDate < DateTime.Now).ToListAsync();
             return Ok(patients);
         }
 

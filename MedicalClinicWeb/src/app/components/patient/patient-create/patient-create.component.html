@@ -47,7 +47,7 @@
             <div class="col-md-6">
               <label for="appointmentDate" class="form-label">Appointment Date</label>
               <input type="datetime-local" class="form-control" id="appointmentDate" name="appointmentDate" 
-                [(ngModel)]="patientCreateModel.AppointmentDate">
+                [(ngModel)]="patientCreateModel.appointmentDate">
             </div>
             <div class="col-md-6">
               <label for="problemDescription" class="form-label">Disease Description</label>
@@ -66,6 +66,10 @@
                 <i class="bi bi-floppy"></i>
                 Save
               </button>
+              <a class="btn btn-sm btn-outline-secondary ms-1 shadow-sm" routerLink="/upcomming_patient_list">
+                <i class="bi bi-x-circle"></i>
+                Cancel
+              </a>
             </div>
           </form>
         </div>

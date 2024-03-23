@@ -52,14 +52,14 @@
             </td>
             <td>
               Doctor: {{ patient.doctorName }} <br>
-              Appointment: {{ patient.AppointmentDate }}
+              Appointment: {{ patient.appointmentDate | date: "MMM d, y - h:mm a" }}
             </td>
             <td>
-              <a class="btn btn-sm btn-outline-info">
+              <a class="btn btn-sm btn-outline-info" (click)="onClickUpdateClient(patient.id)">
                 <i class="bi bi-pencil-square"></i>
                 Edit
               </a>
-              <button class="btn btn-sm btn-outline-danger ms-1">
+              <button class="btn btn-sm btn-outline-danger ms-1" (click)="onDeleteUpcommingPatient(patient.id)">
                 <i class="bi bi-trash"></i>
                 Delete
               </button>

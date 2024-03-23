@@ -1,3 +1,80 @@
-<p>
-  patient-edit works!
-</p>
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <h3 class="text-center">Update Patient</h3>
+      <hr>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <form class="row g-3" autocomplete="off">
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="patientEditModel.firstName">
+            </div>
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="patientEditModel.lastName">
+            </div>
+            <div class="col-md-3">
+              <label for="age" class="form-label">Age</label>
+              <input type="number" class="form-control" id="age" name="age" [(ngModel)]="patientEditModel.age">
+            </div>
+            <div class="col-md-3">
+              <label for="ganderId" class="form-label">Gander</label>
+              <select id="ganderId" class="form-select" name="ganderId" [(ngModel)]="patientEditModel.ganderId">
+                <option value="0">-- Select --</option>
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+                <option value="3">Other</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="patientEditModel.email" 
+                placeholder="example@abc.com">
+            </div>
+            <div class="col-md-3">
+              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="patientEditModel.phoneNumber">
+            </div>
+            <div class="col-md-6">
+              <label for="doctorName" class="form-label">Doctor Name</label>
+              <input type="text" class="form-control" id="doctorName" name="doctorName" [(ngModel)]="patientEditModel.doctorName">
+            </div>
+            <div class="col-md-6">
+              <label for="appointmentDate" class="form-label">Appointment Date</label>
+              <input type="datetime-local" class="form-control" id="appointmentDate" name="appointmentDate" 
+                [(ngModel)]="patientEditModel.appointmentDate">
+            </div>
+            <div class="col-md-6">
+              <label for="problemDescription" class="form-label">Disease Description</label>
+              <textarea class="form-control" id="problemDescription" name="problemDescription"  
+                [(ngModel)]="patientEditModel.problemDescription">
+              </textarea>
+            </div>
+            <div class="col-md-6">
+              <label for="address" class="form-label">Address</label>
+              <textarea class="form-control" id="address" name="address"  
+                [(ngModel)]="patientEditModel.address">
+              </textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-sm btn-outline-success shadow-sm" (click)="onClickUpdatePatient()">
+                <i class="bi bi-floppy"></i>
+                Save
+              </button>
+              <a class="btn btn-sm btn-outline-secondary ms-1 shadow-sm" [routerLink]="path">
+                <i class="bi bi-x-circle"></i>
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

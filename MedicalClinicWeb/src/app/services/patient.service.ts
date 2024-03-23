@@ -14,7 +14,7 @@ export class PatientService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getPatients(): Observable<PatientModel[]> {
+  getUpcommingPatients(): Observable<PatientModel[]> {
     let userInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
 
     const asseccPermission = new HttpHeaders ({
@@ -22,7 +22,19 @@ export class PatientService {
       'Authorization' : `Bearer ${userInfo.token}`
     });    
 
-    const getAllPatientUrl: string = `${this.appBaseUrl}patient/getPatients`;
+    const getAllPatientUrl: string = `${this.appBaseUrl}patient/getUpcommingPatients`;
+    return this.httpClient.get<PatientModel[]>(getAllPatientUrl, { headers: asseccPermission });
+  }
+
+  getPreviousPatients(): Observable<PatientModel[]> {
+    let userInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
+
+    const asseccPermission = new HttpHeaders ({
+      'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${userInfo.token}`
+    });    
+
+    const getAllPatientUrl: string = `${this.appBaseUrl}patient/getPreviousPatients`;
     return this.httpClient.get<PatientModel[]>(getAllPatientUrl, { headers: asseccPermission });
   }
 
@@ -62,7 +74,7 @@ export class PatientService {
     return this.httpClient.post<PatientModel>(createPatientUrl, createModel, { headers: asseccPermission });
   }
 
-  delete(id: string): Observable<PatientModel> {
+  delete(id: number): Observable<number> {
     let userInfo: UserViewModel = JSON.parse(localStorage.getItem('loginUserInfo')!);
 
     const asseccPermission = new HttpHeaders ({
@@ -71,6 +83,6 @@ export class PatientService {
     });    
 
     const deletePatientUrl: string = `${this.appBaseUrl}patient/delete/${id}`;
-    return this.httpClient.delete<PatientModel>(deletePatientUrl, { headers: asseccPermission });
+    return this.httpClient.delete<number>(deletePatientUrl, { headers: asseccPermission });
   }  
 }

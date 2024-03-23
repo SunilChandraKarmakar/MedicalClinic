@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UserCreateViewModel } from 'src/app/models/user/user-create-view-model';
+import { UserViewModel } from 'src/app/models/user/user-view-model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -21,6 +22,15 @@ export class UserCreateComponent implements OnInit {
     private spinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
+    let isUserLogin: boolean = this.checkUserLoginOrNot()!;
+
+    if(isUserLogin) {
+      return;
+    }
+    else {
+      this.toastrService.warning("Please, login first.", "Warning");
+      return this.router.navigate(["/login"]);
+    }
   }
 
   // Create user
@@ -74,5 +84,17 @@ export class UserCreateComponent implements OnInit {
     }
 
     return true;
+  }
+
+  // Check user login or not
+  private checkUserLoginOrNot(): boolean | undefined {
+    let loginUserInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
+
+    if (loginUserInfo == null || loginUserInfo == undefined) {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 }

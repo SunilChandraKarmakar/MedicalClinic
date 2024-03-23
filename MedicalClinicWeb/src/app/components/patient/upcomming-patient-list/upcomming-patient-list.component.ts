@@ -38,7 +38,7 @@ export class UpcommingPatientListComponent implements OnInit {
 
   private getUpcommingPatients(): void {
     this.spinnerService.show();
-    this.patientService.getPatients().subscribe((result: PatientModel[]) => {
+    this.patientService.getUpcommingPatients().subscribe((result: PatientModel[]) => {
       this.upcommingPatients = result;
       this.spinnerService.hide();
     },
@@ -60,6 +60,7 @@ export class UpcommingPatientListComponent implements OnInit {
     }
   }
 
+  // Search patient
   onClickSearchPatient(): void {
     if(this.searchPatient == undefined || this.searchPatient == null || this.searchPatient == "") {
       this.toastrService.warning("Please, provied information.", "Warning");
@@ -68,7 +69,7 @@ export class UpcommingPatientListComponent implements OnInit {
     else {
       this.upcommingPatients = this.upcommingPatients.filter((x: PatientModel) => 
         x.firstName.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
-        x.lastName.toLowerCase().includes(this.searchPatient?.toLowerCase()!) || 
+        // x.lastName.toLowerCase().includes(this.searchPatient?.toLowerCase()!) || 
         x.phoneNumber.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
         x.email.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
         x.doctorName.toLowerCase().includes(this.searchPatient?.toLowerCase()!));
@@ -78,5 +79,29 @@ export class UpcommingPatientListComponent implements OnInit {
 
   onClickResetSearch(): void {
     this.getUpcommingPatients();
+  }
+
+  onDeleteUpcommingPatient(patiendId: number): void {
+    if(patiendId == undefined || patiendId == null) {
+      this.toastrService.warning("Please, provied valid patient id! Try again.", "Warning.");
+      return;
+    }
+
+    this.spinnerService.show();
+    this.patientService.delete(patiendId).subscribe((result: number) => {
+      this.getUpcommingPatients();
+      this.spinnerService.hide();
+      this.toastrService.success("Selected patient deleted.", "Success.");
+      return;
+    },
+    (error: any) => {
+      this.spinnerService.hide();
+      this.toastrService.error("Selected patient cannot deleted! Try again.", "Error");
+      return;
+    })
+  }
+
+  onClickUpdateClient(id: number): void {
+    this.router.navigate([`/patient_update/upcomming_patient_list/${id}`]);
   }
 }

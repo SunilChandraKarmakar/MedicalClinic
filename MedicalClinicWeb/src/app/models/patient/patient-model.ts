@@ -7,7 +7,7 @@ export class PatientModel {
     email: string;
     phoneNumber: string;
     doctorName: string;
-    AppointmentDate: Date;
+    appointmentDate: Date;
     problemDescription: string;
     address: string;
 }

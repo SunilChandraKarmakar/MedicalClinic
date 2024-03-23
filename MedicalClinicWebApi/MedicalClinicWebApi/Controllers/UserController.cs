@@ -47,7 +47,7 @@ namespace MedicalClinicWebApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserUpdateViewModel), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<UserUpdateViewModel>> Get(string id)
         {
@@ -109,6 +109,27 @@ namespace MedicalClinicWebApi.Controllers
             }
 
             return BadRequest(new ResponseStatusModel(ResponseCode.FormValidateError, "Regsitration form validate error.", ModelState));
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<string>> Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
+                return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User id can not found! Try again.", null));
+
+            var existUser = await _userManager.FindByIdAsync(id);
+
+            if (existUser == null)
+                return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not found! Try again.", null));
+
+            var result = await _userManager.DeleteAsync(existUser);
+
+            if (result.Succeeded)
+                return Ok(new ResponseStatusModel(ResponseCode.Ok, "User has been deleted successfull", id));
+
+            return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not deleted! Try again.", id));
         }
 
         private string GenerateToken(UserViewModel user)

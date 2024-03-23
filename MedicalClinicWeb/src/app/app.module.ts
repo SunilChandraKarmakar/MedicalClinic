@@ -16,6 +16,7 @@ import { PatientListComponent } from './components/patient/patient-list/patient-
 import { ProfileComponent } from './components/profile/profile.component';
 import { UpcommingPatientListComponent } from './components/patient/upcomming-patient-list/upcomming-patient-list.component';
 import { PatientEditComponent } from './components/patient/patient-edit/patient-edit.component';
+import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PatientEditComponent } from './components/patient/patient-edit/patient-
     PatientListComponent,
     ProfileComponent,
     UpcommingPatientListComponent,
-    PatientEditComponent
+    PatientEditComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,
