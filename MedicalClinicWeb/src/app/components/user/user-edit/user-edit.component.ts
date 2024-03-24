@@ -63,16 +63,16 @@ export class UserEditComponent implements OnInit {
     let isFormValidationSuccess: boolean = this.checkFormValidation();
 
     if(isFormValidationSuccess) {
-      // this.spinnerService.show();
-      // this.userService.(this.userUpdateModel).subscribe((result: UserUpdateViewModel) => {
-      //   this.spinnerService.hide();
-      //   this.toastrService.success("User create successfull.", "Successfull");
-      //   return this.router.navigate(["/user_list"]);
-      // },
-      // (error: any) => {
-      //   this.spinnerService.hide();
-      //   this.toastrService.error("User cannot created! Try again.", "Error");
-      // });
+      this.spinnerService.show();
+      this.userService.update(this.userUpdateModel.id, this.userUpdateModel).subscribe((result: UserUpdateViewModel) => {
+        this.spinnerService.hide();
+        this.toastrService.success("User create successfull.", "Successfull");
+        return this.router.navigate(["/user_list"]);
+      },
+      (error: any) => {
+        this.spinnerService.hide();
+        this.toastrService.error("User cannot created! Try again.", "Error");
+      });
     }
   }
 
@@ -91,11 +91,6 @@ export class UserEditComponent implements OnInit {
     if(this.userUpdateModel.email == undefined || this.userUpdateModel.email == "" || this.userUpdateModel.email == null) {
       this.toastrService.warning("Please, provied valid email address.", "Warning");
       return false; 
-    }
-
-    if(this.userUpdateModel.password == undefined || this.userUpdateModel.password == "" || this.userUpdateModel.password == null) {
-      this.toastrService.warning("Please, provied password.", "Warning");
-      return false;
     }
 
     if(this.userUpdateModel.phoneNumber == undefined || this.userUpdateModel.phoneNumber == "" || this.userUpdateModel.phoneNumber == null) {

@@ -19,9 +19,7 @@ namespace MedicalClinicWebApi.Model.ViewModels.User
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Please, provied strong password")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [Required(ErrorMessage = "Please, provied phone number.")]
         [StringLength(20, MinimumLength = 2)]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MedicalClinicWebApi.DatabaseSetting;
 using MedicalClinicWebApi.Model.Models;
 using MedicalClinicWebApi.Model.ResponseModel;
 using MedicalClinicWebApi.Model.ViewModels.Login;
@@ -23,14 +24,16 @@ namespace MedicalClinicWebApi.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IMapper _mapper;
         private readonly JwtConfig _jwtConfig;
+        private readonly MedicalClinicWebApiDbContext _context;
 
         public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper,
-                            IOptions<JwtConfig> jwtConfig)
+                            IOptions<JwtConfig> jwtConfig, MedicalClinicWebApiDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
             _jwtConfig = jwtConfig.Value;
+            _context = context;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -83,6 +86,61 @@ namespace MedicalClinicWebApi.Controllers
             }
 
             return BadRequest(new ResponseStatusModel(ResponseCode.FormValidateError, "Regsitration form validate error.", ModelState));
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(UserUpdateViewModel), (int) HttpStatusCode.OK)]
+        public async Task<ActionResult<UserUpdateViewModel>> Update(string id, [FromBody] UserUpdateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
+                    return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User id can not found! Try again.", null));
+
+                var existUser = await _userManager.Users
+                                .AsNoTracking()
+                                .Include(u => u.UserType)
+                                .Where(x => x.Id == id)
+                                .FirstOrDefaultAsync();
+
+                if (existUser == null)
+                    return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not found! Try again.", id));
+
+                var updateUser = new User
+                {
+                    Id = existUser.Id,
+                    AccessFailedCount = existUser.AccessFailedCount,
+                    ConcurrencyStamp = existUser.ConcurrencyStamp,
+                    Email = model.Email,
+                    EmailConfirmed = existUser.EmailConfirmed,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    LockoutEnabled = existUser.LockoutEnabled,
+                    LockoutEnd = existUser.LockoutEnd ?? null,
+                    NormalizedEmail = model.Email.ToUpper(),
+                    NormalizedUserName = model.Email.ToUpper(),
+                    PasswordHash = existUser.PasswordHash,
+                    PhoneNumber = model.PhoneNumber,
+                    PhoneNumberConfirmed = existUser.PhoneNumberConfirmed,
+                    SecurityStamp = existUser.SecurityStamp,
+                    TwoFactorEnabled = existUser.TwoFactorEnabled,
+                    UserName = existUser.UserName,
+                    UserTypeId = model.UserTypeId
+                };
+
+                //var result = await _userManager.UpdateAsync(updateUser);
+                _context.Users.Update(updateUser);
+                var result = await _context.SaveChangesAsync();
+                model = _mapper.Map<UserUpdateViewModel>(existUser);
+
+                if (result > 0)
+                    return Ok(new ResponseStatusModel(ResponseCode.Ok, "User has been updated successfull.", model));
+
+                return BadRequest(new ResponseStatusModel(ResponseCode.Error, "User can not updated! Try again.", null));
+            }
+
+            return BadRequest(new ResponseStatusModel(ResponseCode.FormValidateError, "User edit form validate error.", ModelState));
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace MedicalClinicWebApi.Model.Models
 {
@@ -23,9 +24,8 @@ namespace MedicalClinicWebApi.Model.Models
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Please, provied doctor name.")]
-        [StringLength(30, MinimumLength = 2)]
-        public string DoctorName { get; set; }
+        [Required(ErrorMessage = "Please, select user id.")]
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Please, select appointment date.")]
         [DataType(DataType.DateTime)]
@@ -36,5 +36,7 @@ namespace MedicalClinicWebApi.Model.Models
         public string ProblemDescription { get; set; }
 
         public string? Address { get; set; }
+
+        public User User { get; set; }
     }
 }

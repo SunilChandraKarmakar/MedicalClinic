@@ -40,7 +40,7 @@ export class UserService {
     });   
 
     const getUserUrl: string = `${this.appBaseUrl}user/get/${id}`;
-    return this.httpClient.get<UserUpdateViewModel>(getUserUrl, {headers: asseccPermission});
+    return this.httpClient.get<UserUpdateViewModel>(getUserUrl, { headers: asseccPermission });
   }
 
 
@@ -54,6 +54,18 @@ export class UserService {
 
     const createUserUrl: string = `${this.appBaseUrl}user/create`;
     return this.httpClient.post<UserCreateViewModel>(createUserUrl, createModel, { headers: asseccPermission });
+  }
+
+  update(id: string, model: UserUpdateViewModel): Observable<UserUpdateViewModel> {
+    let userInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
+
+    const asseccPermission = new HttpHeaders ({
+      'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${userInfo.token}`
+    });      
+
+    const updateUserUrl: string = `${this.appBaseUrl}user/update/${id}`;
+    return this.httpClient.put<UserUpdateViewModel>(updateUserUrl, model, { headers: asseccPermission });
   }
 
   login(model: LoginViewModel): Observable<UserViewModel> {
@@ -70,6 +82,6 @@ export class UserService {
     });    
 
     const deleteUserUrl: string = `${this.appBaseUrl}user/delete/${id}`;
-    return this.httpClient.delete<string>(deleteUserUrl, {headers: asseccPermission});
+    return this.httpClient.delete<string>(deleteUserUrl, { headers: asseccPermission });
   }
 }
