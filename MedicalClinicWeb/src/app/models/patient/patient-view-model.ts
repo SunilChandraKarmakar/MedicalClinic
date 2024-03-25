@@ -1,4 +1,4 @@
-export class PatientModel {
+export class PatientViewModel {
     id: number;
     firstName: string;
     lastName: string;
@@ -7,6 +7,7 @@ export class PatientModel {
     email: string;
     phoneNumber: string;
     userId: string;
+    doctroName: string;
     appointmentDate: Date;
     problemDescription: string;
     address: string;

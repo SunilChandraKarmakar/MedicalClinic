@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalClinicWebApi.Model.Models;
+using MedicalClinicWebApi.Model.ViewModels.Patient;
 using MedicalClinicWebApi.Model.ViewModels.User;
 
 namespace MedicalClinicWebApi.AutomapperSetting
@@ -18,6 +19,17 @@ namespace MedicalClinicWebApi.AutomapperSetting
 
             CreateMap<User, UserUpdateViewModel>();
             CreateMap<UserUpdateViewModel, User>();
+
+            // Patient model map
+            CreateMap<Patient, PatientCreateModel>();
+            CreateMap<PatientCreateModel, Patient>();
+
+            CreateMap<Patient, PatientViewModel>()
+                .ForMember(d => d.DoctroName, s => s.MapFrom(m => (m.User.FirstName + " " + m.User.LastName)));
+            CreateMap<PatientViewModel, Patient>();
+
+            CreateMap<Patient, PatientEditModel>();
+            CreateMap<PatientEditModel, Patient>();
         }
     }
 }

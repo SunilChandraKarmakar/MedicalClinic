@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { PatientModel } from 'src/app/models/patient/patient-model';
+import { UserType } from 'src/app/models/constant/user-type.enum';
+import { PatientViewModel } from 'src/app/models/patient/patient-view-model';
 import { UserViewModel } from 'src/app/models/user/user-view-model';
 import { PatientService } from 'src/app/services/patient.service';
 
@@ -17,8 +18,13 @@ export class UpcommingPatientListComponent implements OnInit {
   constructor(private patientService: PatientService, private spinnerService: NgxSpinnerService, private toastrService: ToastrService,
     private router: Router) { }
 
+  // Login user info
+  isAdminUser: boolean = false;
+  private _loginUserTypeId: number | undefined;
+  private _loginUserId: string | undefined;
+
   // Upcomming patient data source
-  upcommingPatients: PatientModel[] = [];
+  upcommingPatients: PatientViewModel[] = [];
 
   // Search patient property
   searchPatient: string | undefined;
@@ -38,14 +44,26 @@ export class UpcommingPatientListComponent implements OnInit {
 
   private getUpcommingPatients(): void {
     this.spinnerService.show();
-    this.patientService.getUpcommingPatients().subscribe((result: PatientModel[]) => {
-      this.upcommingPatients = result;
-      this.spinnerService.hide();
-    },
-    (error: any) => {
-      this.spinnerService.hide();
-      this.toastrService.error("Upcomming patient cannot load! Please, try again.", "Error");
-    })
+    if(this._loginUserTypeId != UserType.Normal) {
+      this.patientService.getUpcommingPatients().subscribe((result: PatientViewModel[]) => {
+        this.upcommingPatients = result;
+        this.spinnerService.hide();
+      },
+      (error: any) => {
+        this.spinnerService.hide();
+        this.toastrService.error("Upcomming patient cannot load! Please, try again.", "Error");
+      })
+    }
+    else {
+      this.patientService.getUpcommingPatientsByDoctroId(this._loginUserId!).subscribe((result: PatientViewModel[]) => {
+        this.upcommingPatients = result;
+        this.spinnerService.hide();
+      },
+      (error: any) => {
+        this.spinnerService.hide();
+        this.toastrService.error("Upcomming patient cannot load! Please, try again.", "Error");
+      })
+    }
   }
 
   // Check user login or not
@@ -56,6 +74,15 @@ export class UpcommingPatientListComponent implements OnInit {
       return false;
     }
     else {
+
+      this._loginUserTypeId = loginUserInfo.userTypeId;
+      this._loginUserId = loginUserInfo.id;
+
+      // Checl login user type 
+      if(loginUserInfo.userTypeId == UserType.Admin) {
+        this.isAdminUser = true;
+      }
+
       return true;
     }
   }
@@ -67,18 +94,19 @@ export class UpcommingPatientListComponent implements OnInit {
       return;
     }
     else {
-      this.upcommingPatients = this.upcommingPatients.filter((x: PatientModel) => 
+      this.upcommingPatients = this.upcommingPatients.filter((x: PatientViewModel) => 
         x.firstName.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
         // x.lastName.toLowerCase().includes(this.searchPatient?.toLowerCase()!) || 
         x.phoneNumber.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
         x.email.toLowerCase().includes(this.searchPatient?.toLowerCase()!) ||
-        x.doctorName.toLowerCase().includes(this.searchPatient?.toLowerCase()!));
+        x.doctroName.toLowerCase().includes(this.searchPatient?.toLowerCase()!));
       return;
     }
   }
 
   onClickResetSearch(): void {
     this.getUpcommingPatients();
+    this.searchPatient = undefined;
   }
 
   onDeleteUpcommingPatient(patiendId: number): void {

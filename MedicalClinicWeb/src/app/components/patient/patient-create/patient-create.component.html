@@ -40,11 +40,15 @@
               <label for="phoneNumber" class="form-label">Phone Number</label>
               <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="patientCreateModel.phoneNumber">
             </div>
-            <div class="col-md-6">
-              <label for="doctorName" class="form-label">Doctor Name</label>
-              <input type="text" class="form-control" id="doctorName" name="doctorName" [(ngModel)]="patientCreateModel.doctorName">
+            <div class="col-md-6" [hidden]="loginUserTypeId == 1">
+              <label for="userId" class="form-label">Doctor Name</label>
+              <!-- <input type="text" class="form-control" id="doctorName" name="doctorName" [(ngModel)]="patientCreateModel.doctorName"> -->
+              <select class="form-select" id="userId" name="userId" [(ngModel)]="patientCreateModel.userId">
+                <option value="0">-- Select --</option>
+                <option [value]="doctor.id" *ngFor="let doctor of users">{{ doctor.firstName }} {{ doctor.lastName }}</option>
+              </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" [ngClass]="{ 'col-md-8': loginUserTypeId == 1 }">
               <label for="appointmentDate" class="form-label">Appointment Date</label>
               <input type="datetime-local" class="form-control" id="appointmentDate" name="appointmentDate" 
                 [(ngModel)]="patientCreateModel.appointmentDate">

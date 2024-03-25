@@ -33,7 +33,7 @@
             <th class="th-lg">Basic Info</th>
             <th class="th-lg">Contact Info</th>
             <th class="th-lg">Appointment</th>
-            <th class="th-lg">Action</th>
+            <th class="th-lg" [hidden]="isAdminUser">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -51,10 +51,10 @@
               Phone: {{ patient.phoneNumber }}
             </td>
             <td>
-              Doctor: {{ patient.doctorName }} <br>
+              Doctor: {{ patient.doctroName }} <br>
               Appointment: {{ patient.appointmentDate  | date: "MMM d, y - h:mm a" }}
             </td>
-            <td>
+            <td [hidden]="isAdminUser">
               <a class="btn btn-sm btn-outline-info" (click)="onClickUpdateClient(patient.id)">
                 <i class="bi bi-pencil-square"></i>
                 Edit
@@ -71,7 +71,7 @@
             <th>Basic Info</th>
             <th>Contact Info</th>
             <th>Appointment</th>
-            <th>Action</th>
+            <th [hidden]="isAdminUser">Action</th>
           </tr>
         </tfoot>
       </table>

@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { PatientModel } from 'src/app/models/patient/patient-model';
+import { UserType } from 'src/app/models/constant/user-type.enum';
+import { PatientCreateModel } from 'src/app/models/patient/patient-create-model';
 import { UserViewModel } from 'src/app/models/user/user-view-model';
 import { PatientService } from 'src/app/services/patient.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-patient-create',
@@ -15,10 +17,17 @@ import { PatientService } from 'src/app/services/patient.service';
 export class PatientCreateComponent implements OnInit {
 
   // Patient create model
-  patientCreateModel: PatientModel = new PatientModel();
+  patientCreateModel: PatientCreateModel = new PatientCreateModel();
+
+  // Login user info
+  loginUserId: string | undefined;
+  loginUserTypeId: number | undefined;
+
+  // User data source
+  users: UserViewModel[] = [];
 
   constructor(private toastrService: ToastrService, private router: Router, private spinnerService: NgxSpinnerService,
-    private patientService: PatientService) { }
+    private patientService: PatientService, private userService: UserService) { }
 
   ngOnInit() {
     let isUserLogin: boolean = this.checkUserLoginOrNot()!;
@@ -26,6 +35,8 @@ export class PatientCreateComponent implements OnInit {
     if(isUserLogin) {
       // Set gander id default = 0 - Select
       this.patientCreateModel.ganderId = 0;
+      this.patientCreateModel.userId = "0";
+      this.getUsers();
       return;
     }
     else {
@@ -40,7 +51,13 @@ export class PatientCreateComponent implements OnInit {
 
     if(isFormValidationSuccess) {
       this.spinnerService.show();
-      this.patientService.create(this.patientCreateModel).subscribe((result: PatientModel) => {
+
+      // Set doctro 
+      if(this.loginUserTypeId == UserType.Normal) {
+        this.patientCreateModel.userId = this.loginUserId!;
+      }
+
+      this.patientService.create(this.patientCreateModel).subscribe((result: PatientCreateModel) => {
         this.spinnerService.hide();
         this.toastrService.success("Patient create successfull.", "Successfull.");
         return this.router.navigate(["/upcomming_patient_list"]);
@@ -48,7 +65,7 @@ export class PatientCreateComponent implements OnInit {
       (error: any) => {
         this.spinnerService.hide();
         return this.toastrService.error("Patient cannot create! Try again.", "Error");
-      })
+      });
     }
   }
 
@@ -56,10 +73,12 @@ export class PatientCreateComponent implements OnInit {
   private checkUserLoginOrNot(): boolean | undefined {
     let loginUserInfo: UserViewModel = JSON.parse(localStorage.getItem("loginUserInfo")!);
 
-    if (loginUserInfo == null || loginUserInfo == undefined) {
+    if (loginUserInfo == null || loginUserInfo == undefined || loginUserInfo.userTypeId == UserType.Admin) {
       return false;
     }
     else {
+      this.loginUserId = loginUserInfo.id;
+      this.loginUserTypeId = loginUserInfo.userTypeId;
       return true;
     }
   }
@@ -86,9 +105,9 @@ export class PatientCreateComponent implements OnInit {
       return false;
     }
 
-    if(this.patientCreateModel.doctorName == undefined || this.patientCreateModel.doctorName == null 
-      || this.patientCreateModel.doctorName == "") {
-      this.toastrService.warning("Please, provied doctor name.", "Warning");
+    if((this.loginUserTypeId == UserType.Manager) && (this.patientCreateModel.userId == undefined || this.patientCreateModel.userId == null 
+      || this.patientCreateModel.userId == "" || this.patientCreateModel.userId == "0")) {
+      this.toastrService.warning("Please, select doctor name.", "Warning");
       return false;
     }
 
@@ -104,5 +123,20 @@ export class PatientCreateComponent implements OnInit {
     }
 
     return true;
+  }
+
+  // Get user without admin and manager
+  private getUsers(): void {
+    this.spinnerService.show();
+    this.userService.getUsers().subscribe((result: UserViewModel[]) => {
+      this.users = result.filter(x => x.userTypeId != 2 && x.userTypeId  != 3);
+      this.spinnerService.hide();
+      return;
+    },
+    (errpr: any) => {
+      this.spinnerService.hide();
+      this.toastrService.error("Doctor cannot load! Please, try again.", "Error");
+      return;
+    })
   }
 }

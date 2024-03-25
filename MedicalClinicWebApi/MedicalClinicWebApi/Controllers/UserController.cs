@@ -43,6 +43,7 @@ namespace MedicalClinicWebApi.Controllers
         {
             var users = await _userManager.Users
                         .Include(u => u.UserType)
+                        .OrderBy(o => o.UserTypeId)
                         .ToListAsync();
 
             var mapUsers = _mapper.Map<IEnumerable<UserViewModel>>(users);

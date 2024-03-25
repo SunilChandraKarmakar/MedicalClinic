@@ -1,4 +1,4 @@
-export class PatientModel {
+export class PatientEditModel {
     id: number;
     firstName: string;
     lastName: string;

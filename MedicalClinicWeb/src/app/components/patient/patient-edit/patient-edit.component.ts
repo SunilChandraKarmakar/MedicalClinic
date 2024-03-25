@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { UserType } from 'src/app/models/constant/user-type.enum';
+import { PatientEditModel } from 'src/app/models/patient/patient-edit-model';
 import { PatientModel } from 'src/app/models/patient/patient-model';
 import { UserViewModel } from 'src/app/models/user/user-view-model';
 import { PatientService } from 'src/app/services/patient.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-patient-edit',
@@ -15,16 +18,23 @@ import { PatientService } from 'src/app/services/patient.service';
 export class PatientEditComponent implements OnInit {
 
   constructor(private activeRoute: ActivatedRoute, private spinnerService: NgxSpinnerService, private toastrService: ToastrService, 
-    private router: Router, private patientService: PatientService) { }
+    private router: Router, private patientService: PatientService, private userService: UserService) { }
 
   // Patient id
   private _selectedPatientId: number | undefined; 
 
   // Patient edit model
-  patientEditModel: PatientModel = new PatientModel();
+  patientEditModel: PatientEditModel = new PatientEditModel();
+
+  // User data source
+  users: UserViewModel[] = [];
 
   // Path navigation property
   path: string | undefined;
+
+  // Login user info
+  loginUserId: string | undefined;
+  loginUserTypeId: number | undefined;
 
   ngOnInit() {
     let isUserLogin: boolean = this.checkUserLoginOrNot()!;
@@ -32,6 +42,7 @@ export class PatientEditComponent implements OnInit {
     if(isUserLogin) {
       this.getPatientIdWithState();
       this.getPatientById();
+      this.getUsers();
       return;
     }
     else {
@@ -56,6 +67,9 @@ export class PatientEditComponent implements OnInit {
       return false;
     }
     else {
+      this.loginUserId = loginUserInfo.id;
+      this.loginUserTypeId = loginUserInfo.userTypeId;
+
       return true;
     }
   }
@@ -65,7 +79,13 @@ export class PatientEditComponent implements OnInit {
 
     if(isFormValidationSuccess) {
       this.spinnerService.show();
-      this.patientService.update(this.patientEditModel.id, this.patientEditModel).subscribe((result: PatientModel) => {
+
+      // Set doctro 
+      if(this.loginUserTypeId == UserType.Normal) {
+        this.patientEditModel.userId = this.loginUserId!;
+      }
+
+      this.patientService.update(this.patientEditModel.id, this.patientEditModel).subscribe((result: PatientEditModel) => {
         this.spinnerService.hide();
         this.toastrService.success("Patient update.", "Successfull.");
         return this.router.navigate([`${this.path}`]);
@@ -117,8 +137,8 @@ export class PatientEditComponent implements OnInit {
       return false;
     }
 
-    if(this.patientEditModel.doctorName == undefined || this.patientEditModel.doctorName == null 
-      || this.patientEditModel.doctorName == "") {
+    if((this.loginUserTypeId == UserType.Manager) && (this.patientEditModel.userId == undefined || this.patientEditModel.userId == null 
+      || this.patientEditModel.userId == "" || this.patientEditModel.userId == "0")) {
       this.toastrService.warning("Please, provied doctor name.", "Warning");
       return false;
     }
@@ -135,5 +155,20 @@ export class PatientEditComponent implements OnInit {
     }
 
     return true;
+  }
+
+  // Get user without admin and manager
+  private getUsers(): void {
+    this.spinnerService.show();
+    this.userService.getUsers().subscribe((result: UserViewModel[]) => {
+      this.users = result.filter(x => x.userTypeId != 2 && x.userTypeId  != 3);
+      this.spinnerService.hide();
+      return;
+    },
+    (errpr: any) => {
+      this.spinnerService.hide();
+      this.toastrService.error("Doctor cannot load! Please, try again.", "Error");
+      return;
+    })
   }
 }

@@ -2,7 +2,7 @@
   style="background-image: linear-gradient(to left, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%); 
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Medical Clinic</a>
+    <a class="navbar-brand">Medical Clinic</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,7 +12,7 @@
           <a class="nav-link active" aria-current="page" routerLink="/user_list" [hidden]="isNormalUser || isManager || !isUserLogin">User</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/patient_create" [hidden]="!isUserLogin">Create Patient Serial</a>
+          <a class="nav-link" routerLink="/patient_create" [hidden]="!isUserLogin || isAdmin">Create Patient Serial</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/upcomming_patient_list" [hidden]="!isUserLogin">Upcomming Patient Serial</a>

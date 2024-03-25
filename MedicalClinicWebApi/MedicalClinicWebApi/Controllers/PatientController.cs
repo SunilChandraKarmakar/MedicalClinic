@@ -1,5 +1,7 @@
-﻿using MedicalClinicWebApi.DatabaseSetting;
+﻿using AutoMapper;
+using MedicalClinicWebApi.DatabaseSetting;
 using MedicalClinicWebApi.Model.Models;
+using MedicalClinicWebApi.Model.ViewModels.Patient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,44 +16,94 @@ namespace MedicalClinicWebApi.Controllers
     public class PatientController : ControllerBase
     {
         private readonly MedicalClinicWebApiDbContext _context;
-        public PatientController(MedicalClinicWebApiDbContext context) => _context = context;
+        private readonly IMapper _mapper;
 
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Patient>), (int) HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetUpcommingPatients()
+        public PatientController(MedicalClinicWebApiDbContext context, IMapper mapper)
         {
-            var patients = await _context.Patients.Where(p => p.AppointmentDate > DateTime.Now).ToListAsync();
-            return Ok(patients);
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Patient>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPreviousPatients()
+        [ProducesResponseType(typeof(IEnumerable<PatientViewModel>), (int) HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetUpcommingPatients()
         {
-            var patients = await _context.Patients.Where(p => p.AppointmentDate < DateTime.Now).ToListAsync();
-            return Ok(patients);
+            var patients = await _context.Patients
+                           .Include(p => p.User)
+                           .Where(p => p.AppointmentDate > DateTime.Now)
+                           .ToListAsync();
+
+            var mapPatients = _mapper.Map<IEnumerable<PatientViewModel>>(patients);
+            return Ok(mapPatients);
+        }
+
+        [HttpGet("{doctroId}")]
+        [ProducesResponseType(typeof(IEnumerable<PatientViewModel>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetUpcommingPatientsByDoctroId(string doctroId)
+        {
+            if (string.IsNullOrEmpty(doctroId) || string.IsNullOrWhiteSpace(doctroId))
+                return BadRequest();
+
+            var patients = await _context.Patients
+                           .Include(p => p.User)
+                           .Where(p => p.AppointmentDate > DateTime.Now && p.UserId == doctroId)
+                           .ToListAsync();
+
+            var mapPatients = _mapper.Map<IEnumerable<PatientViewModel>>(patients);
+            return Ok(mapPatients);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PatientViewModel>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetPreviousPatients()
+        {
+            var patients = await _context.Patients
+                          .Include(p => p.User)
+                          .Where(p => p.AppointmentDate < DateTime.Now)
+                          .ToListAsync();
+
+            var mapPatients = _mapper.Map<IEnumerable<PatientViewModel>>(patients);
+            return Ok(mapPatients);
+        }
+
+        [HttpGet("{doctroId}")]
+        [ProducesResponseType(typeof(IEnumerable<PatientViewModel>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetPreviousPatientsByDoctroId(string doctroId)
+        {
+            if (string.IsNullOrEmpty(doctroId) || string.IsNullOrWhiteSpace(doctroId))
+                return BadRequest();
+
+            var patients = await _context.Patients
+                          .Include(p => p.User)
+                          .Where(p => p.AppointmentDate < DateTime.Now && p.UserId == doctroId)
+                          .ToListAsync();
+
+            var mapPatients = _mapper.Map<IEnumerable<PatientViewModel>>(patients);
+            return Ok(mapPatients);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Patient), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Patient>> GetPatient(int id)
+        [ProducesResponseType(typeof(PatientEditModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PatientEditModel>> GetPatient(int id)
         {
             var patient = await _context.Patients.FindAsync(id);
 
             if (patient == null)
                 return NotFound();
 
-            return Ok(patient);
+            var patientEditModel = _mapper.Map<PatientEditModel>(patient);
+            return Ok(patientEditModel);
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(Patient), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Patient>> Update(int id, Patient patient)
+        [ProducesResponseType(typeof(PatientEditModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PatientEditModel>> Update(int id, PatientEditModel patient)
         {
             if (id != patient.Id)
                 return BadRequest();
 
-            _context.Entry(patient).State = EntityState.Modified;
+            var mapPatient = _mapper.Map<Patient>(patient);
+            _context.Entry(mapPatient).State = EntityState.Modified;
 
             try
             {
@@ -69,15 +121,17 @@ namespace MedicalClinicWebApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Patient), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult<Patient>> Create(Patient patient)
+        [ProducesResponseType(typeof(PatientCreateModel), (int)HttpStatusCode.Created)]
+        public async Task<ActionResult<PatientCreateModel>> Create(PatientCreateModel patient)
         {
             if(ModelState.IsValid)
             {
-                _context.Patients.Add(patient);
+                var mapPatient = _mapper.Map<Patient>(patient);
+                _context.Patients.Add(mapPatient);
                 await _context.SaveChangesAsync();
 
-                return Ok(patient);
+                var patientCreateModel = _mapper.Map<PatientCreateModel>(mapPatient);
+                return Ok(patientCreateModel);
             }
 
             return BadRequest();
